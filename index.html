@@ -25,11 +25,12 @@
         filter: contrast(130%) brightness(70%);
     }
 
+    /* MODIFICATO: Posizionamento centrale e larghezza intera */
     #face-container {
         position: fixed;
         top: 0;
-        right: 0;
-        width: 60vw;
+        left: 0; /* Cambiato da right:0 a left:0 */
+        width: 100vw; /* Cambiato da 60vw a 100vw */
         height: 100vh;
         z-index: 5;
         opacity: 0;
@@ -107,7 +108,8 @@ const faceSketch = (p) => {
     let hasImg = false;
     p.preload = () => { img = p.loadImage('ag.png', () => hasImg = true); };
     p.setup = () => {
-        let cnv = p.createCanvas(p.windowWidth * 0.6, p.windowHeight);
+        // MODIFICATO: Canvas a tutta larghezza
+        let cnv = p.createCanvas(p.windowWidth, p.windowHeight);
         cnv.parent('face-container');
         if(hasImg) img.resize(80, 0);
     };
@@ -117,7 +119,12 @@ const faceSketch = (p) => {
         let sY = window.scrollY;
         let baseChaos = (sY < 2000) ? p.map(sY, 1400, 2000, 450, 8) : p.map(sY, 2800, 3800, 8, 500);
         baseChaos = p.constrain(baseChaos, 5, 500);
-        let d = 10, ox = (p.width - img.width * d) / 2, oy = (p.height - img.height * d) / 2;
+        
+        // MODIFICATO: ox e oy calcolati sul centro perfetto del canvas
+        let d = 10;
+        let ox = (p.width - img.width * d) / 2;
+        let oy = (p.height - img.height * d) / 2;
+
         for (let j = 0; j < img.height; j++) {
             for (let i = 0; i < img.width; i++) {
                 let col = img.get(i, j);
@@ -133,11 +140,12 @@ const faceSketch = (p) => {
             }
         }
     };
-    p.windowResized = () => { p.resizeCanvas(p.windowWidth * 0.6, p.windowHeight); };
+    // MODIFICATO: Resize a tutta larghezza
+    p.windowResized = () => { p.resizeCanvas(p.windowWidth, p.windowHeight); };
 };
 new p5(faceSketch);
 
-// --- 2. ANIMAZIONE M ---
+// --- 2. ANIMAZIONE M (Invariata) ---
 const mSketch = (p) => {
     const m_coords = [0, 10, 0, 0, 4, 5, 8, 0, 8, 10, 6.5, 10, 6.5, 3, 4, 6.5, 1.5, 3, 1.5, 10]; 
     p.setup = () => { p.createCanvas(p.windowWidth, p.windowHeight).parent('m-container'); };
