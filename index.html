@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Martina Zemp</title>
+<title>Martina Zemp - Portfolio</title>
 <style>
     body {
         margin: 0;
         padding: 0;
         font-family: Helvetica, sans-serif;
         color: white;
-        background-color: #050505;
+        background-color: #000000;
         overflow-x: hidden;
-        min-height: 250vh; 
+        min-height: 1050vh; 
     }
 
     #background {
@@ -22,20 +22,38 @@
         width: 100%;
         height: 100%;
         z-index: 1;
-        /* Effetto sfondo */
         filter: contrast(130%) brightness(70%);
     }
 
-    /* Leggibilità dei testi sopra lo sfondo */
+    #face-container {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 60vw;
+        height: 100vh;
+        z-index: 5;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        pointer-events: auto; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #m-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 4;
+        pointer-events: none;
+    }
+
     .content-overlay {
         position: relative;
         z-index: 10;
-    }
-
-    span.text-letter, h1, h2, p, a {
-        position: relative;
-        z-index: 2;
-        text-shadow: 0 0 15px rgba(0,0,0,1), 0 0 5px rgba(0,0,0,1);
+        pointer-events: none;
     }
 
     h1#title {
@@ -46,186 +64,177 @@
         left: 50%;
         transform: translate(-50%, -50%);
         white-space: nowrap;
-        transition: opacity 0.8s ease, transform 0.8s ease;
         margin: 0;
         letter-spacing: -5px;
+        transition: opacity 0.5s ease, transform 0.5s ease;
     }
-/*testo intro*/
-    h2#subtitle, #links-text {
+
+    h2#subtitle {
         font-size: 20px;
-        opacity: 0;
         position: fixed;
         left: 40px;
-        transform: translateX(-100vw);
+        top: 100px;
         margin: 0;
-    }
-
-    h2#subtitle { top: 100px; }
-    #links-text { top: 180px; }
-    #links-text { top: 500; }
-    #links-text { top: 400px; }
-
-    @keyframes bounceIn {
-        0% { transform: translateX(-100vw); opacity: 0; }
-        70% { transform: translateX(60px); opacity: 1; }
-        100% { transform: translateX(0); opacity: 1; }
-    }
-
-    .visible {
-        animation: bounceIn 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    }
-
-    .delay-1 { animation-delay: 0.8s; } /* Modifica qui il tempo di attesa dei link(es. 0.5s) */
-    .delay-subtitle { animation-delay: 0.6s; } /* Ritardo per il sottotitolo */
-
-    .link {
-        font-size: 20px;
-        color: white;
-        text-decoration: none;
-        border-bottom: none; /* rimuove la linea sotto */
-        transition: background 0.3s, color 0.3s;
-    }
-    
-    .link:hover {
-        background: white;
-        color: black;
-        text-decoration: none;
-        border-bottom: none;
+        line-height: 1.4;
+        opacity: 0;
+        transform: translateX(-50px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
     }
 </style>
 </head>
 <body>
 
-    /*scritte*/  
-
 <canvas id="background"></canvas>
+<div id="face-container"></div>
+<div id="m-container"></div>
+
 <div class="content-overlay">
     <h1 id="title">Martina Zemp</h1>
-    <h2 id="subtitle">Portfolio personale di coding <br> 
+    <h2 id="subtitle">Pagina personale di coding <br> 
         e sperimentazione visiva.<br><br>
         Una settimana di seminario <br>
          di introduzione alla <br>
         programmazione del designer<br>
-        </h2>
-   <!--  <p id="links-text">Dove mi trovi<br><br>
-        <a class="link" target="_blank" href="https://www.instagram.com/martiinazemp">IG: @martiinazemp</a> <br>
-        <a class="link" target="_blank" href="https://www.instagram.com/martiinazemp">IG: @martiinazemp</a>
-    </p> --> 
+    </h2>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+
 <script>
-// --- Canvas ---
-const canvas = document.getElementById("background");
-const ctx = canvas.getContext("2d");
-
-let blocks = [];
-const blockCount = 450; // Molto fitto per simulare l'immagine
-
-function initCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    createPattern();
-}
-
-function createPattern() {
-    blocks = [];
-    for (let i = 0; i < blockCount; i++) {
-        // Alternanza tra blocchi larghi e linee sottili verticali
-        const type = Math.random();
-        blocks.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height * 3,
-            width: type > 0.8 ? Math.random() * 50 + 20 : Math.random() * 5 + 1,
-            height: Math.random() * 500 + 50,
-            // Toni di grigio scuro e medio
-            color: Math.floor(Math.random() * 100 + 10),
-            opacity: Math.random() * 0.7 + 0.1,
-            speed: Math.random() * 0.4 + 0.1
-        });
-    }
-}
-
-function draw() {
-    ctx.fillStyle = "#050505";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    blocks.forEach(b => {
-        let currentY = b.y - (window.scrollY * b.speed);
-        
-        // Reset posizione per scroll infinito
-        if (currentY + b.height < -200) b.y += canvas.height + 800;
-        if (currentY > canvas.height + 200) b.y -= canvas.height + 800;
-
-        ctx.fillStyle = `rgba(${b.color}, ${b.color}, ${b.color}, ${b.opacity})`;
-        ctx.fillRect(b.x, currentY, b.width, b.height);
-        
-        // Dettaglio extra: bordi sottili casuali per l'effetto "glitch tecnico"
-        if (b.width > 30 && Math.random() > 0.95) {
-            ctx.strokeStyle = "rgba(255,255,255,0.1)";
-            ctx.strokeRect(b.x, currentY, b.width, b.height);
+// --- 1. ANIMAZIONE VOLTO ---
+const faceSketch = (p) => {
+    let img;
+    let hasImg = false;
+    p.preload = () => { img = p.loadImage('ag.png', () => hasImg = true); };
+    p.setup = () => {
+        let cnv = p.createCanvas(p.windowWidth * 0.6, p.windowHeight);
+        cnv.parent('face-container');
+        if(hasImg) img.resize(80, 0);
+    };
+    p.draw = () => {
+        p.clear();
+        if(!hasImg) return;
+        let sY = window.scrollY;
+        let baseChaos = (sY < 2000) ? p.map(sY, 1400, 2000, 450, 8) : p.map(sY, 2800, 3800, 8, 500);
+        baseChaos = p.constrain(baseChaos, 5, 500);
+        let d = 10, ox = (p.width - img.width * d) / 2, oy = (p.height - img.height * d) / 2;
+        for (let j = 0; j < img.height; j++) {
+            for (let i = 0; i < img.width; i++) {
+                let col = img.get(i, j);
+                if (p.alpha(col) < 128) continue;
+                let dMouse = p.dist(p.mouseX, p.mouseY, ox + i * d, oy + j * d);
+                let currentChaos = baseChaos * p.max(1, p.map(dMouse, 0, 300, 12, 1));
+                let nX = p.noise(i * 0.1, j * 0.1, p.frameCount * 0.02);
+                let nY = p.noise(i * 0.1, j * 0.1, p.frameCount * 0.02 + 10);
+                p.fill(255); p.noStroke();
+                p.circle(ox + i * d + p.map(nX, 0, 1, -currentChaos, currentChaos), 
+                         oy + j * d + p.map(nY, 0, 1, -currentChaos, currentChaos), 
+                         p.map(p.brightness(col), 0, 255, 0, d * 0.8));
+            }
         }
-    });
+    };
+    p.windowResized = () => { p.resizeCanvas(p.windowWidth * 0.6, p.windowHeight); };
+};
+new p5(faceSketch);
 
-    requestAnimationFrame(draw);
-}
+// --- 2. ANIMAZIONE M ---
+const mSketch = (p) => {
+    const m_coords = [0, 10, 0, 0, 4, 5, 8, 0, 8, 10, 6.5, 10, 6.5, 3, 4, 6.5, 1.5, 3, 1.5, 10]; 
+    p.setup = () => { p.createCanvas(p.windowWidth, p.windowHeight).parent('m-container'); };
+    p.draw = () => {
+        p.clear();
+        let sY = window.scrollY;
+        if (sY > 4800) {
+            let mScroll = p.map(sY, 4800, 9500, 0, 1, true);
+            let alphaFade = p.map(mScroll, 0.85, 0.98, 255, 0, true);
+            if (alphaFade <= 0) return;
+            let chaos = p.map(mScroll, 0, 0.2, 1, 0, true); 
+            let zoom = 1 + p.pow(p.map(mScroll, 0.25, 1, 0, 1, true) * 15, 3); 
+            let disint = p.map(mScroll, 0.35, 0.85, 0, 1, true);
+            p.noFill(); 
+            for (let i = 0; i < 60; i++) { 
+                p.stroke(255, p.map(i, 0, 60, 255, 40) * (alphaFade / 255)); 
+                p.push(); p.translate(p.width / 2, p.height / 2); 
+                p.rotate(p.sin((p.frameCount + (i * 3)) * 0.02) * p.lerp(chaos * 5, 0.15 + (disint * 2.5), 1 - chaos)); 
+                let s = (8 + (60 - i) * 1.5) * zoom; 
+                p.strokeWeight(p.map(mScroll, 0.3, 1, 1.2, 0.1)); 
+                p.beginShape(); 
+                for (let j = 0; j < m_coords.length; j += 2) { 
+                    let jit = (chaos * 180) + (disint * 400 * (i/60)); 
+                    p.vertex((m_coords[j] - 4) * s + (p.noise(j, i, p.frameCount * 0.04) - 0.5) * jit, 
+                             (m_coords[j + 1] - 5) * s + (p.noise(j+10, i, p.frameCount * 0.04) - 0.5) * jit); 
+                } 
+                p.endShape(p.CLOSE); p.pop(); 
+            } 
+        }
+    };
+    p.windowResized = () => { p.resizeCanvas(p.windowWidth, p.windowHeight); };
+};
+new p5(mSketch);
 
-// --- ANIMAZIONE TESTO (Martina Zemp) ---
-function animateText(element, delay = 50) {
-    const text = element.textContent;
-    element.textContent = '';
-    const letters = [];
-    for(let i = 0; i < text.length; i++) {
-        const span = document.createElement('span');
-        span.textContent = text[i] === " " ? "\u00A0" : text[i];
-        span.className = 'text-letter';
-        span.style.display = 'inline-block';
-        span.style.opacity = 0;
-        
-        const dirs = ['left','right','top','bottom'];
-        const dir = dirs[Math.floor(Math.random()*4)];
-        if(dir==='left') span.style.transform='translateX(-100vw)';
-        if(dir==='right') span.style.transform='translateX(100vw)';
-        if(dir==='top') span.style.transform='translateY(-100vh)';
-        if(dir==='bottom') span.style.transform='translateY(100vh)';
-        
-        element.appendChild(span);
-        letters.push(span);
+// --- 3. SFONDO BLOCCHI ---
+const bgCanvas = document.getElementById("background"), bgCtx = bgCanvas.getContext("2d");
+let blocks = [];
+function initBg() {
+    bgCanvas.width = window.innerWidth; bgCanvas.height = window.innerHeight; blocks = [];
+    for (let i = 0; i < 600; i++) {
+        blocks.push({ x: Math.random() * bgCanvas.width, y: Math.random() * bgCanvas.height * 4, w: Math.random() > 0.8 ? Math.random() * 60 + 20 : Math.random() * 4 + 1, h: Math.random() * 500 + 50, c: Math.floor(Math.random() * 110 + 20), o: Math.random() * 0.6 + 0.1, s: Math.random() * 0.6 + 0.1 });
     }
-    letters.forEach((span, i) => {
-        setTimeout(() => {
-            span.style.transition = 'transform 1.2s cubic-bezier(0.19, 1, 0.22, 1), opacity 1s ease';
-            span.style.transform = 'translate(0,0)';
-            span.style.opacity = 1;
-        }, i * delay);
+}
+function drawBg() {
+    bgCtx.fillStyle = "#000000"; bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
+    let sY = window.scrollY, dFactor = sY < 1200 ? 1 : Math.max(0, 1 - (sY - 1200) / 1000);
+    if (dFactor > 0) {
+        for (let i = 0; i < Math.floor(blocks.length * dFactor); i++) {
+            let b = blocks[i], curY = b.y - (sY * b.s);
+            if (curY + b.h < -200) b.y += bgCanvas.height + 1000;
+            bgCtx.fillStyle = `rgba(${b.c},${b.c},${b.c},${b.o * dFactor})`;
+            bgCtx.fillRect(b.x, curY, b.w, b.h);
+        }
+    }
+    requestAnimationFrame(drawBg);
+}
+
+// --- 4. ANIMAZIONE TITOLO LETTERE SPARSE ---
+function animateTitle(el) {
+    const txt = el.textContent; el.textContent = '';
+    [...txt].forEach((c, i) => {
+        const s = document.createElement('span'); s.textContent = c === " " ? "\u00A0" : c;
+        s.style.display = 'inline-block'; s.style.opacity = 0;
+        s.style.transform = `translate(${Math.random()*200-100}px,${Math.random()*200-100}px)`;
+        el.appendChild(s);
+        setTimeout(() => { 
+            s.style.transition = 'all 0.8s cubic-bezier(0.2, 1, 0.3, 1)'; 
+            s.style.opacity = 1; 
+            s.style.transform = 'translate(0,0)'; 
+        }, i * 60);
     });
 }
 
-// --- LOGICA DI SCROLL ---
+// --- 5. LOGICA SCROLL ---
 window.addEventListener('scroll', () => {
-    const title = document.getElementById('title');
-    const subtitle = document.getElementById('subtitle');
-    const links = document.getElementById('links-text');
-    
-    if(window.scrollY > 150) {
-        title.style.transform = 'translate(-50%, -150%)'; 
-        title.style.opacity = '0';
-        subtitle.classList.add('visible');
-        subtitle.classList.add('delay-subtitle');
-        links.classList.add('visible');
-        links.classList.add('delay-1');
-    } else {
-        title.style.transform = 'translate(-50%, -50%)';
-        title.style.opacity = '1';
-        subtitle.classList.remove('visible');
-        links.classList.remove('visible');
-    }
+    const sY = window.scrollY;
+    const title = document.getElementById('title'), subtitle = document.getElementById('subtitle'), face = document.getElementById('face-container');
+    if (sY < 450) {
+        title.style.opacity = Math.max(0, 1 - sY / 300);
+        title.style.transform = `translate(-50%, ${-50 - (sY/7)}%)`;
+    } else title.style.opacity = 0;
+    if (sY > 450 && sY < 2000) {
+        subtitle.style.opacity = 1;
+        if (sY > 1400) {
+            subtitle.style.opacity = Math.max(0, 1 - (sY - 1400) / 400);
+            subtitle.style.transform = `translateY(-${(sY - 1400)}px)`;
+        } else subtitle.style.transform = "translateX(0)";
+    } else subtitle.style.opacity = 0;
+    if (sY > 1600 && sY < 4800) { 
+        face.style.opacity = '1'; 
+        if (sY > 4000) face.style.opacity = Math.max(0, 1 - (sY - 4000) / 600);
+    } else face.style.opacity = '0';
 });
 
-// Init
-window.addEventListener("resize", initCanvas);
-initCanvas();
-draw();
-animateText(document.getElementById('title'), 80);
+initBg(); drawBg();
+animateTitle(document.getElementById('title'));
+window.addEventListener("resize", initBg);
 </script>
 
 </body>
