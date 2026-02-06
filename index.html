@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Martina Zemp - Portfolio</title>
+<title>Martina Zemp - Pagina di sperimentazione</title>
 <style>
     body {
         margin: 0;
@@ -25,12 +25,11 @@
         filter: contrast(130%) brightness(70%);
     }
 
-    /* MODIFICATO: Posizionamento centrale e larghezza intera */
     #face-container {
         position: fixed;
         top: 0;
-        left: 0; /* Cambiato da right:0 a left:0 */
-        width: 100vw; /* Cambiato da 60vw a 100vw */
+        left: 0; 
+        width: 100vw; 
         height: 100vh;
         z-index: 5;
         opacity: 0;
@@ -81,6 +80,21 @@
         transform: translateX(-50px);
         transition: opacity 0.5s ease, transform 0.5s ease;
     }
+
+    /* Stile per il link Instagram */
+    .social-link {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        pointer-events: auto; /* Rende il link cliccabile nonostante il contenitore non lo sia */
+        display: inline-block;
+        margin-top: 10px;
+        transition: opacity 0.3s ease;
+    }
+
+    .social-link:hover {
+        opacity: 0.7;
+    }
 </style>
 </head>
 <body>
@@ -95,7 +109,8 @@
         e sperimentazione visiva.<br><br>
         Una settimana di seminario <br>
          di introduzione alla <br>
-        programmazione del designer<br>
+        programmazione del designer<br><br>
+        <a href="https://www.instagram.com/martiinazemp" target="_blank" class="social-link">@martiinazemp</a>
     </h2>
 </div>
 
@@ -108,7 +123,6 @@ const faceSketch = (p) => {
     let hasImg = false;
     p.preload = () => { img = p.loadImage('ag.png', () => hasImg = true); };
     p.setup = () => {
-        // MODIFICATO: Canvas a tutta larghezza
         let cnv = p.createCanvas(p.windowWidth, p.windowHeight);
         cnv.parent('face-container');
         if(hasImg) img.resize(80, 0);
@@ -120,7 +134,6 @@ const faceSketch = (p) => {
         let baseChaos = (sY < 2000) ? p.map(sY, 1400, 2000, 450, 8) : p.map(sY, 2800, 3800, 8, 500);
         baseChaos = p.constrain(baseChaos, 5, 500);
         
-        // MODIFICATO: ox e oy calcolati sul centro perfetto del canvas
         let d = 10;
         let ox = (p.width - img.width * d) / 2;
         let oy = (p.height - img.height * d) / 2;
@@ -140,12 +153,11 @@ const faceSketch = (p) => {
             }
         }
     };
-    // MODIFICATO: Resize a tutta larghezza
     p.windowResized = () => { p.resizeCanvas(p.windowWidth, p.windowHeight); };
 };
 new p5(faceSketch);
 
-// --- 2. ANIMAZIONE M (Invariata) ---
+// --- 2. ANIMAZIONE M ---
 const mSketch = (p) => {
     const m_coords = [0, 10, 0, 0, 4, 5, 8, 0, 8, 10, 6.5, 10, 6.5, 3, 4, 6.5, 1.5, 3, 1.5, 10]; 
     p.setup = () => { p.createCanvas(p.windowWidth, p.windowHeight).parent('m-container'); };
